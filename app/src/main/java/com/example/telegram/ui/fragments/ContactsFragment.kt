@@ -6,7 +6,9 @@ import android.view.ViewGroup
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.example.telegram.R
+import com.example.telegram.database.*
 import com.example.telegram.models.CommonModel
+import com.example.telegram.ui.fragments.single_chat.SingleChatFragment
 import com.example.telegram.utilits.*
 import com.firebase.ui.database.FirebaseRecyclerAdapter
 import com.firebase.ui.database.FirebaseRecyclerOptions
@@ -44,7 +46,7 @@ class ContactsFragment : BaseFragment(R.layout.fragment_contacts) {
         mAdapter = object : FirebaseRecyclerAdapter<CommonModel, ContactsHolder>(options) {
 
             override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ContactsHolder {
-               //Запускается тогда когда адаптер получает доступ к ViewGroup
+                //Запускается тогда когда адаптер получает доступ к ViewGroup
                 val view = LayoutInflater.from(parent.context)
                     .inflate(R.layout.contact_item, parent, false)
                 return ContactsHolder(view)
@@ -67,7 +69,11 @@ class ContactsFragment : BaseFragment(R.layout.fragment_contacts) {
 
                     holder.status.text = contact.state
                     holder.photo.downloadAndSetImage(contact.photoUrl)
-                    holder.itemView.setOnClickListener { replaceFragment(SingleChatFragment(model)) }
+                    holder.itemView.setOnClickListener { replaceFragment(
+                        SingleChatFragment(
+                            model
+                        )
+                    ) }
                 }
 
                 mRefUsers.addValueEventListener(mRefUsersListener)
@@ -97,4 +103,3 @@ class ContactsFragment : BaseFragment(R.layout.fragment_contacts) {
         println()
     }
 }
-
