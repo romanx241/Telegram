@@ -86,11 +86,11 @@ class SingleChatFragment(private val contact: CommonModel) :
         mMessagesListener = AppChildEventListener {
             val message = it.getCommonModel()
             if (mSmoothScrollToPosition) {
-                mAdapter.addItenToBottom(message) {
+                mAdapter.addItemToBottom(message) {
                     mRecyclerView.smoothScrollToPosition(mAdapter.itemCount)
                 }
             } else {
-                mAdapter.addItenToTop(message) {
+                mAdapter.addItemToTop(message) {
                     mSwipeRefreshLayout.isRefreshing = false
                 }
             }
@@ -163,6 +163,7 @@ private fun initInfoToolbar() {
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         /* Активность которая запускается для получения картинки для фото пользователя */
+
         super.onActivityResult(requestCode, resultCode, data)
         if (requestCode == CropImage.CROP_IMAGE_ACTIVITY_REQUEST_CODE
             && resultCode == Activity.RESULT_OK && data != null
@@ -180,13 +181,11 @@ private fun initInfoToolbar() {
             putImageToStorage(uri, path) {
                 getUrlFromStorage(path) {
                     sendMessageAsImage(contact.id, it, messageKey)
-
+                    mSmoothScrollToPosition = true
                 }
             }
         }
     }
-
-
 
     override fun onPause() {
     super.onPause()
