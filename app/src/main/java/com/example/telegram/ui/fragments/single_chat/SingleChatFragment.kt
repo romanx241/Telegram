@@ -3,6 +3,7 @@ package com.example.telegram.ui.fragments.single_chat
 import android.annotation.SuppressLint
 import android.app.Activity
 import android.content.Intent
+import android.net.Uri
 import android.view.MotionEvent
 import android.view.View
 import android.widget.AbsListView
@@ -42,17 +43,18 @@ class SingleChatFragment(private val contact: CommonModel) :
     private var mSmoothScrollToPosition = true
     private lateinit var mSwipeRefreshLayout: SwipeRefreshLayout
     private lateinit var mLayoutManager: LinearLayoutManager
+    private lateinit var mAppVoiceRecorder: AppVoiceRecorder
 
     override fun onResume() {
         super.onResume()
         initFields()
-
         initToolbar()
         initRecycleView()
     }
 
     @SuppressLint("ClickableViewAccessibility")
     private fun initFields() {
+        mAppVoiceRecorder = AppVoiceRecorder()
         mSwipeRefreshLayout = chat_swipe_refresh
         mLayoutManager = LinearLayoutManager(this.context)
 
@@ -77,16 +79,22 @@ class SingleChatFragment(private val contact: CommonModel) :
                         //TODO
                         chat_input_message.setText("Запись")
                         chat_btn_voice.setColorFilter(ContextCompat.getColor(APP_ACTIVITY, R.color.primary))
+                        val messageKey = getMessageKey(contact.id)
+                        mAppVoiceRecorder.startRecord(messageKey)
                     } else if (motionEvent.action == MotionEvent.ACTION_UP){
                         //TODO
                         chat_input_message.setText("")
                         chat_btn_voice.colorFilter = null
+                        mAppVoiceRecorder.stopRecord{ file, messageKey ->
+                            uploadFileToStorage(Uri.fromFile(file), messageKey)
+                        }
                     }
                 }
                 true
             }
         }
     }
+
 
     private fun attachFile() {
         CropImage.activity()
@@ -194,11 +202,7 @@ private fun initInfoToolbar() {
         ) {
 
             val uri = CropImage.getActivityResult(data).uri
-            val messageKey = REF_DATABASE_ROOT
-                .child(NODE_MESSAGES)
-                .child(CURRENT_UID)
-                .child(contact.id)
-                .push().key.toString()
+            val messageKey = getMessageKey(contact.id)
             val path = REF_STORAGE_ROOT
                 .child(FOLDER_MESSAGE_IMAGE)
                 .child(messageKey)
@@ -211,10 +215,17 @@ private fun initInfoToolbar() {
         }
     }
 
+
+
     override fun onPause() {
     super.onPause()
     mToolbarInfo.visibility = View.GONE
     mRefUser.removeEventListener(mListenerInfoToolbar)
     mRefMessages.removeEventListener(mMessagesListener)
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        mAppVoiceRecorder.releaseRecorder()
     }
 }
