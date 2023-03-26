@@ -18,10 +18,6 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
 
-/*
-* Курс по созданию мессенджера для Android
-* Автор Петров Юрий
-*/
 /* Главная активность*/
 
 class MainActivity : AppCompatActivity() {
@@ -46,8 +42,6 @@ class MainActivity : AppCompatActivity() {
         }
 
     }
-
-
 
     private fun initFunc() {
         /* Функция инициализирует функциональность приложения */

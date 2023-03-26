@@ -6,7 +6,6 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.constraintlayout.widget.ConstraintLayout
-import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.example.telegram.R
 import com.example.telegram.database.CURRENT_UID
@@ -23,7 +22,7 @@ class SingleChatAdapter : RecyclerView.Adapter<SingleChatAdapter.SingleChatHolde
 
     class SingleChatHolder(view: View) : RecyclerView.ViewHolder(view) {
 
-        //Taxt
+        //Text
         val blocUserMessage: ConstraintLayout = view.bloc_user_message
         val chatUserMessage: TextView = view.chat_user_message
         val chatUserMessageTime: TextView = view.chat_user_message_time
@@ -32,7 +31,6 @@ class SingleChatAdapter : RecyclerView.Adapter<SingleChatAdapter.SingleChatHolde
         val chatReceivedMessageTime: TextView = view.chat_received_message_time
 
         //Image
-
         val blocReceivedImageMessage: ConstraintLayout = view.bloc_received_image_message
         val blocUserImageMessage: ConstraintLayout = view.bloc_user_image_message
         val chatUserImage: ImageView = view.chat_user_image
